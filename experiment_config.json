@@ -1,0 +1,10 @@
+{
+  "SAC": {
+    "script": "cleanrl/sac_continuous_action.py",
+    "output_dir": "logs_sac"
+  },
+  "PPO": {
+    "script": "cleanrl/ppo_continuous_action.py",
+    "output_dir": "logs_ppo"
+  }
+}
