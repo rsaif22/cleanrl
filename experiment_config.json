@@ -3,6 +3,18 @@
     "script": "cleanrl/sac_continuous_action.py",
     "output_dir": "logs_sac"
   },
+  "SAC_3Q": {
+    "script": "cleanrl/sac_continuous_action_redq3.py",
+    "output_dir": "logs_sac_3q"
+  },
+  "SAC_5Q": {
+    "script": "cleanrl/sac_continuous_action_redq5.py",
+    "output_dir": "logs_sac_5q"
+  },
+  "SAC_delayed": {
+    "script": "cleanrl/sac_continuous_action_delayed.py",
+    "output_dir": "logs_sac_delayed"
+  },
   "PPO": {
     "script": "cleanrl/ppo_continuous_action.py",
     "output_dir": "logs_ppo"

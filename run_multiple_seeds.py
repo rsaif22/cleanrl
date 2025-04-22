@@ -6,14 +6,14 @@ import json
 import re
 
 
-def read_experiment_config(config_path="experiment_config.json"):
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(f"Missing config file: {config_path}")
-    with open(config_path, "r") as f:
+def read_json(path):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Missing JSON file: {path}")
+    with open(path, "r") as f:
         return json.load(f)
 
 
-def read_and_update_exp_name(method_name: str, entity_file: str = "wandb_entity.txt") -> str:
+def read_and_update_exp_name(method_name: str, entity_file: str = "wandb_entity.txt") -> int:
     records = {}
     if os.path.exists(entity_file):
         with open(entity_file, "r") as f:
@@ -26,10 +26,10 @@ def read_and_update_exp_name(method_name: str, entity_file: str = "wandb_entity.
     with open(entity_file, "w") as f:
         for k, v in sorted(records.items()):
             f.write(f"{k}: {v}\n")
-    return f"{method_name}{new_count}"
+    return new_count
 
 
-def run_experiment(script_path, seed, exp_name, output_dir, track=False, capture_video=False, extra_args=""):
+def run_experiment(script_path, seed, exp_name, output_dir, gym_env_id, track=False, capture_video=False, extra_args=""):
     script_path = Path(script_path).resolve()
     run_name = f"{exp_name}_seed{seed}"
     log_path = Path(output_dir) / f"{run_name}.log"
@@ -39,12 +39,13 @@ def run_experiment(script_path, seed, exp_name, output_dir, track=False, capture
         "python", str(script_path),
         "--seed", str(seed),
         "--exp_name", exp_name,
+        "--env_id", gym_env_id
     ]
 
     if track:
         cmd.extend([
             "--track",
-            "--wandb_project_name", exp_name  # project name same as exp_name (e.g., SAC4)
+            "--wandb_project_name", exp_name
         ])
 
     if capture_video:
@@ -61,31 +62,44 @@ def run_experiment(script_path, seed, exp_name, output_dir, track=False, capture
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--method_name", type=str, required=True,
-                        help="Short method name (e.g. SAC, PPO)")
+                        help="Short name of the method (e.g. SAC)")
+    parser.add_argument("--env_name", type=str, required=True,
+                        help="Short name of the environment (e.g. Hopper)")
     parser.add_argument("--num_seeds", type=int, default=5,
                         help="Number of seeds to run")
     parser.add_argument("--track", action="store_true",
-                        help="Enable W&B tracking")
+                        help="Enable W&B logging")
     parser.add_argument("--capture_video", action="store_true",
-                        help="Capture env videos")
+                        help="Enable video capture")
     parser.add_argument("--extra_args", type=str, default="",
                         help="Extra args to pass to script")
     parser.add_argument("--entity_file", type=str, default="wandb_entity.txt",
-                        help="File tracking experiment counts per method")
+                        help="File that tracks experiment numbers")
     parser.add_argument("--config_file", type=str, default="experiment_config.json",
-                        help="Config JSON with script/output_dir for methods")
+                        help="Mapping of method -> script/output_dir")
+    parser.add_argument("--env_map_file", type=str, default="env_map.json",
+                        help="Mapping of env_name -> gym env ID")
 
     args = parser.parse_args()
-    config = read_experiment_config(args.config_file)
 
-    if args.method_name not in config:
-        raise ValueError(f"Method {args.method_name} not found in config file.")
+    # Load configs
+    method_config = read_json(args.config_file)
+    env_map = read_json(args.env_map_file)
 
-    script_path = config[args.method_name]["script"]
-    output_dir = config[args.method_name]["output_dir"]
-    exp_name = read_and_update_exp_name(args.method_name, args.entity_file)
+    if args.method_name not in method_config:
+        raise ValueError(f"Method '{args.method_name}' not found in {args.config_file}")
+    if args.env_name not in env_map:
+        raise ValueError(f"Env '{args.env_name}' not found in {args.env_map_file}")
 
-    print(f"Auto-generated experiment/project name: {exp_name}")
+    script_path = method_config[args.method_name]["script"]
+    output_dir = method_config[args.method_name]["output_dir"]
+    gym_env_id = env_map[args.env_name]
+
+    # Create exp_name like SAC5_Hopper
+    exp_num = read_and_update_exp_name(args.method_name, args.entity_file)
+    exp_name = f"{args.method_name}{exp_num}_{args.env_name}"
+
+    print(f"Launching experiment: {exp_name} → {gym_env_id}")
 
     for seed in range(args.num_seeds):
         run_experiment(
@@ -93,6 +107,7 @@ def main():
             seed=seed,
             exp_name=exp_name,
             output_dir=output_dir,
+            gym_env_id=gym_env_id,
             track=args.track,
             capture_video=args.capture_video,
             extra_args=args.extra_args,
