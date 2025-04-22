@@ -39,7 +39,7 @@ class Args:
     """the environment id of the task"""
     total_timesteps: int = 1000000
     """total timesteps of the experiments"""
-    num_envs: int = 1
+    num_envs: int = 4
     """the number of parallel game environments"""
     buffer_size: int = int(1e6)
     """the replay memory buffer size"""
@@ -189,7 +189,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # env setup
-    envs = gym.vector.SyncVectorEnv(
+    # envs = gym.vector.SyncVectorEnv(
+    #     [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
+    # )
+    envs = gym.vector.AsyncVectorEnv(
         [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
     )
     assert isinstance(envs.single_action_space, gym.spaces.Box), "only continuous action space is supported"
