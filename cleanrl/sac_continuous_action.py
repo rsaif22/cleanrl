@@ -63,6 +63,8 @@ class Args:
     """Entropy regularization coefficient."""
     autotune: bool = True
     """automatic tuning of the entropy coefficient"""
+    partial_obs: bool = False
+    """drop qvel features → partially-observable MuJoCo tasks""" # George addition
 
 
 def make_env(env_id, seed, idx, capture_video, run_name):
@@ -72,6 +74,12 @@ def make_env(env_id, seed, idx, capture_video, run_name):
             env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
         else:
             env = gym.make(env_id)
+        
+        # Apply partial-observability wrapper if requested
+        if args.partial_obs:
+            from cleanrl_extra.wrappers import PartialObsWrapper
+            env = PartialObsWrapper(env)
+
         env = gym.wrappers.RecordEpisodeStatistics(env)
         env.action_space.seed(seed)
         return env

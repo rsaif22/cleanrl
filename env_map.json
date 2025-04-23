@@ -2,5 +2,5 @@
   "Hopper": "Hopper-v4",
   "Walker": "Walker2d-v4",
   "Ant": "Ant-v4",
-  "Cheetah": "HalfCheetah-v4"
+  "HalfCheetah":  "HalfCheetah-v4"
 }
