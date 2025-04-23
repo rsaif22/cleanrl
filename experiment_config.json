@@ -7,6 +7,10 @@
     "script": "cleanrl/sac_continuous_action_redq3.py",
     "output_dir": "logs_sac_3q"
   },
+  "SAC_3Q_G": {
+    "script": "cleanrl/sac_continuous_action_redq3G.py",
+    "output_dir": "logs_sac_3qG"
+  },
   "SAC_5Q": {
     "script": "cleanrl/sac_continuous_action_redq5.py",
     "output_dir": "logs_sac_5q"
