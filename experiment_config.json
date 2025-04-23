@@ -22,5 +22,9 @@
   "PPO": {
     "script": "cleanrl/ppo_continuous_action.py",
     "output_dir": "logs_ppo"
+  },
+  "TD3": {
+    "script": "cleanrl/td3_continuous_action.py",
+    "output_dir": "logs_td3"
   }
 }

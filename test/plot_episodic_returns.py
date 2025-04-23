@@ -9,11 +9,15 @@ sac_pov_file = "sac_pov_hopper_aligned.csv"
 sacd_file = "sacd_cheetah_aligned.csv"
 sac3q_file = "sac3q_cheetah_aligned.csv"
 sac5q_file = "sac5q_cheetah_aligned.csv"
+# sac_file = "sac_cheetah_aligned.csv"
+# sacd_file = "sacd_cheetah_aligned.csv"
+# sac3q_file = "sac3q_cheetah_aligned.csv"
+# sac5q_file = "sac5q_cheetah_aligned.csv"
 
-# sac_file = "sac_hopper_aligned.csv"
-# sacd_file = "sacd_hopper_aligned.csv"
-# sac3q_file = "sac3q_hopper_aligned.csv"
-# sac5q_file = "sac5q_hopper_aligned.csv"
+sac_file = "sac_hopper_aligned.csv"
+sacd_file = "sacd_hopper_aligned.csv"
+sac3q_file = "sac3q_hopper_aligned.csv"
+sac5q_file = "sac5q_hopper_aligned.csv"
 
 algos = {
     "SAC": sac_file,
