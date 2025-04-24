@@ -15,10 +15,18 @@
     "script": "cleanrl/sac_continuous_action_redq5.py",
     "output_dir": "logs_sac_5q"
   },
+  "SAC_10Q": {
+    "script": "cleanrl/sac_continuous_action_redq10.py",
+    "output_dir": "logs_sac_10q"
+  },
   "SAC_delayed": {
     "script": "cleanrl/sac_continuous_action_delayed.py",
     "output_dir": "logs_sac_delayed"
   },
+  "SAC_delayed_5": {
+    "script": "cleanrl/sac_continuous_action_delayed_5.py",
+    "output_dir": "logs_sac_delayed_5"
+  }, 
   "PPO": {
     "script": "cleanrl/ppo_continuous_action.py",
     "output_dir": "logs_ppo"
