@@ -73,7 +73,11 @@ def make_env(env_id, seed, idx, capture_video, run_name, partial_obs, frame_stac
     def thunk():
         if capture_video and idx == 0:
             env = gym.make(env_id, render_mode="rgb_array")
-            env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
+            env = gym.wrappers.RecordVideo(
+                env,
+                video_folder=f"videos/{run_name}",
+                episode_trigger=lambda episode_id: episode_id % 10 == 0
+            )
         else:
             env = gym.make(env_id)
         

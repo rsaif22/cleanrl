@@ -10,7 +10,8 @@ sac_file = "sac_cheetah_aligned.csv"
 # sac3q_file = "sac3q_cheetah_aligned.csv"
 # sac5q_file = "sac5q_cheetah_aligned.csv"
 sac_pov_file = "sac_pov_cheetah_aligned.csv"
-sacfs_pov_file = "sacfs_pov_cheetah_aligned.csv"
+sac4fs_pov_file = "sac4fs_pov_cheetah_aligned.csv"
+sac12fs_pov_file = "sac12fs_pov_cheetah_aligned.csv"
 
 # Hopper2D
 # sac_file = "sac_hopper_aligned.csv"
@@ -18,12 +19,15 @@ sacfs_pov_file = "sacfs_pov_cheetah_aligned.csv"
 # sac3q_file = "sac3q_hopper_aligned.csv"
 # sac5q_file = "sac5q_hopper_aligned.csv"
 # sac_pov_file = "sac_pov_hopper_aligned.csv"
-# sacfs_pov_file = "sacfs_pov_hopper_aligned.csv"
+# sac4fs_pov_file = "sac4fs_pov_hopper_aligned.csv"
+# sac12fs_pov_file = "sac12fs_pov_hopper_aligned.csv"
+
 
 algos = {
-    "SAC": sac_file,
-    "SAC (POMDP)": sac_pov_file,
-    "SAC-FS (POMDP)": sacfs_pov_file,
+    "SAC (FULL STATE)": sac_file,
+    "SAC (NO VELOCITIES)": sac_pov_file,
+    "SAC-4FS (NO VELOCITIES)": sac4fs_pov_file,
+    "SAC-12FS (NO VELOCITIES)": sac12fs_pov_file,
     # "SAC-D": sacd_file,
     # "SAC-3Q": sac3q_file,
     # "SAC-5Q": sac5q_file
