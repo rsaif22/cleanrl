@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse
 import json
 import re
-
+import sys, shutil
 
 def read_json(path):
     if not os.path.exists(path):
@@ -35,8 +35,10 @@ def run_experiment(script_path, seed, exp_name, output_dir, gym_env_id, track=Fa
     log_path = Path(output_dir) / f"{run_name}.log"
     os.makedirs(output_dir, exist_ok=True)
 
+    module = f"cleanrl.{script_path.stem}"
     cmd = [
-        "python", str(script_path),
+        sys.executable,
+        "-m", module,
         "--seed", str(seed),
         "--exp_name", exp_name,
         "--env_id", gym_env_id
@@ -55,6 +57,9 @@ def run_experiment(script_path, seed, exp_name, output_dir, gym_env_id, track=Fa
         cmd.extend(extra_args.split())
 
     print(f"Running: {' '.join(cmd)}")
+    # print(f"Will exec command: {cmd!r}")
+    # print("  sys.executable =", sys.executable)
+    # print("  which python →", shutil.which("python"))
     with open(log_path, "w") as log_file:
         subprocess.run(cmd, stdout=log_file, stderr=subprocess.STDOUT, check=True)
 

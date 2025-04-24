@@ -13,7 +13,7 @@ import torch.optim as optim
 import tyro
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
-
+from gymnasium.wrappers import FrameStack, FlattenObservation
 
 @dataclass
 class Args:
@@ -65,9 +65,11 @@ class Args:
     """automatic tuning of the entropy coefficient"""
     partial_obs: bool = False
     """drop qvel features → partially-observable MuJoCo tasks""" # George addition
+    frame_stack: int = 1
+    """number of consecutive observations to stack (for partial observability)"""
 
 
-def make_env(env_id, seed, idx, capture_video, run_name):
+def make_env(env_id, seed, idx, capture_video, run_name, partial_obs, frame_stack):
     def thunk():
         if capture_video and idx == 0:
             env = gym.make(env_id, render_mode="rgb_array")
@@ -81,6 +83,10 @@ def make_env(env_id, seed, idx, capture_video, run_name):
             env = PartialObsWrapper(env)
 
         env = gym.wrappers.RecordEpisodeStatistics(env)
+        # Apply frame-stacking if requested
+        if frame_stack > 1:
+            env = FrameStack(env, frame_stack)
+            env = FlattenObservation(env)
         env.action_space.seed(seed)
         return env
 
@@ -200,8 +206,19 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     # envs = gym.vector.SyncVectorEnv(
     #     [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
     # )
+    # envs = gym.vector.AsyncVectorEnv(
+    #     [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
+    # )
     envs = gym.vector.AsyncVectorEnv(
-        [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
+        [make_env(
+            args.env_id,
+            args.seed + i,
+            i,
+            args.capture_video,
+            run_name,
+            args.partial_obs,
+            args.frame_stack
+        ) for i in range(args.num_envs)]
     )
     assert isinstance(envs.single_action_space, gym.spaces.Box), "only continuous action space is supported"
 

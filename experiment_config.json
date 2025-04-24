@@ -26,5 +26,9 @@
   "TD3": {
     "script": "cleanrl/td3_continuous_action.py",
     "output_dir": "logs_td3"
+  },
+  "SAC_recurrent": {
+    "script": "cleanrl/sac_continuous_action_recurrent.py",
+    "output_dir": "logs_sac_recurrent"
   }
 }
