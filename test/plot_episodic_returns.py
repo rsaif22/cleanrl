@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import argparse
 import numpy as np
 
+sac_file = "sac_hopper_aligned.csv"
+sac_pov_file = "sac_pov_hopper_aligned.csv"
+sacd_file = "sacd_cheetah_aligned.csv"
+sac3q_file = "sac3q_cheetah_aligned.csv"
+sac5q_file = "sac5q_cheetah_aligned.csv"
 # sac_file = "sac_cheetah_aligned.csv"
 # sacd_file = "sacd_cheetah_aligned.csv"
 # sac3q_file = "sac3q_cheetah_aligned.csv"
@@ -16,9 +21,10 @@ sac5q_file = "sac5q_hopper_aligned.csv"
 
 algos = {
     "SAC": sac_file,
-    "SAC-D": sacd_file,
-    "SAC-3Q": sac3q_file,
-    "SAC-5Q": sac5q_file
+    "SAC-POV": sac_pov_file,
+    # "SAC-D": sacd_file,
+    # "SAC-3Q": sac3q_file,
+    # "SAC-5Q": sac5q_file
 }
 
 def plot_multiple_episodic_returns(algos, output_image=None):
